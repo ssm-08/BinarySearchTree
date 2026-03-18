@@ -11,9 +11,9 @@ struct Node {
   
 };
 
-bool search(Node* r, int n);
-void insertion(Node*& r, int n);
-void deletion(Node*& r);
+bool search(Node* c, int n);
+void insertion(Node*& r, Node* c, Node* p, Node* n);
+void deletion(Node*& r, Node* p, int n);
 
 int main() {
 
@@ -40,6 +40,21 @@ int main() {
 
     } else if (strcmp(input, QUIT) == 0) {
       run = false;
+    }
+  }
+}
+
+bool search(Node* c, int n) {
+
+  if (c == NULL) {
+    return false;
+  } else {
+    if (n < c->value) {
+      return search(c->left, n);
+    } else if (n > c->value) {
+      return(c->right, n);
+    } else {
+      return true;
     }
   }
 }

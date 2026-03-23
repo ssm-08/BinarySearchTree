@@ -117,3 +117,64 @@ void insertion(Node*& r, Node* c, Node* p, Node* n, bool isLeft) {
     insertion(r, c->right, c, n, false);
   }
 }
+
+void deletion(Node*& r, Node* c, Node* p, int n, bool isLeft) {
+
+  // Find correct node
+  if (n != c->value) {
+    if (n < c->value) {
+      deletion(r, c->left, c, n, true);
+    } else if (n > c->value) {
+      deletion(r, c->right, c, n, false);
+    }
+  }
+
+  if (c->left && c->right) { // Two child
+
+    int temp = c->value;
+    Node* s = c->right;
+
+    // Find successor
+    while (s->left != NULL) {
+      s = s->left;
+    }
+
+    // Swap values
+    c->value = s->value;
+    s->value = temp;
+
+    deletion(r, c, p, isLeft);
+    
+  } else if (c->left && !c->right) { // One child
+
+    // Swap values
+    
+    int temp = c->value;
+    c->value = c->left->value;
+    c->left->value = temp;
+
+    deletion(r, c, p, n, isLeft);
+
+    
+  } else if (!c->left && c->right) { // One child
+
+    // Swap values
+    
+    int temp = c->value;
+    c->value = c->right->value;
+    c->left->value = temp;
+
+    deletion(r, c, p, n, isLeft);
+    
+  } else { // No child
+    
+    delete c;
+    c = NULL;
+
+    if (isLeft) {
+      p->left = NULL;
+    } else {
+      p->right = NULL;
+    }
+  }
+}

@@ -51,15 +51,19 @@ int main() {
       cin >> num;
       cout << endl;
 
-      Node* data = new Node{num, NULL, NULL};
-      insertion(root, root, root, data, true);
-      
+      if (search(root, num)) {
+	Node* data = new Node{num, NULL, NULL};
+	insertion(root, root, root, data, true);
+      }
+	  
     } else if (strcmp(input, DEL) == 0) {
       cout << "Enter number: ";
       cin >> num;
       cout << endl;
 
-      deletion(root, root, root, num, true);
+      if (search(root, num)) {
+	deletion(root, root, root, num, true);
+      }
       
     } else if (strcmp(input, PRINT) == 0) {
       print(root, 0);
@@ -131,38 +135,48 @@ void deletion(Node*& r, Node* c, Node* p, int n, bool isLeft) {
   } else if (n > c->value) {
     deletion(r, c->right, c, n, false);
   } else {
-    if (c->left && c->right) {
 
-    } else if (c->left) {
+    Node* child = NULL;
+    Node* parent = NULL;
+    
+    if (c->left != NULL && c->right != NULL) { // Two children
 
-      if (isLeft) {
-	p->left = c->left;
-      } else {
-	p->right = c->left;
+      // Find successor
+      child = c->right;
+
+      while (child->left != NULL) {
+	parent = child;
+	child = child->left;
       }
 
-      delete c;
+      // Swap and link
+      if (parent) {
+	parent->left = child->right;
+      }
+
+      child->left = c->left;
+      if (child != c->right) {
+	child->right = c->right;
+      }
       
-    } else if (c->right) {
-
-      if (isLeft) {
-	p->left = c->right;
-      } else {
-	p->right = c->right;
-      }
-
-      delete c;
+    } else { // No child or one child
       
-    } else {
-
-      if (isLeft) {
-	p->left = NULL;
-      } else {
-	p->right = NULL;
+      if (c->left) {
+	child = c->left;
+      } else if (c->right) {
+	child = c->right;
       }
-
-      delete c;
-
     }
+
+    // Link child in tree and delete node
+    
+    if (c == r) {
+      r = child;
+    } else if (isLeft) {
+      p->left = child;
+    } else {
+      p->right = child;
+    }
+      delete c;
   }
 }

@@ -14,7 +14,7 @@ struct Node {
 bool search(Node* c, int n);
 void print(Node* c, int depth);
 void insertion(Node*& r, Node* c, Node* p, Node* n, bool isLeft);
-void deletion(Node*& r, Node* p, int n);
+void deletion(Node*& r, Node* c, Node* p, int n, bool isLeft);
 
 int main() {
 
@@ -55,7 +55,12 @@ int main() {
       insertion(root, root, root, data, true);
       
     } else if (strcmp(input, DEL) == 0) {
+      cout << "Enter number: ";
+      cin >> num;
+      cout << endl;
 
+      deletion(root, root, root, num, true);
+      
     } else if (strcmp(input, PRINT) == 0) {
       print(root, 0);
     } else if (strcmp(input, QUIT) == 0) {
@@ -120,61 +125,44 @@ void insertion(Node*& r, Node* c, Node* p, Node* n, bool isLeft) {
 
 void deletion(Node*& r, Node* c, Node* p, int n, bool isLeft) {
 
-  // Find correct node
-  if (n != c->value) {
-    if (n < c->value) {
-      deletion(r, c->left, c, n, true);
-    } else if (n > c->value) {
-      deletion(r, c->right, c, n, false);
-    }
-  }
+  // Find node
+  if (n < c->value) {
+    deletion(r, c->left, c, n, true);
+  } else if (n > c->value) {
+    deletion(r, c->right, c, n, false);
+  } else {
+    if (c->left && c->right) {
 
-  if (c->left && c->right) { // Two child
+    } else if (c->left) {
 
-    int temp = c->value;
-    Node* s = c->right;
+      if (isLeft) {
+	p->left = c->left;
+      } else {
+	p->right = c->left;
+      }
 
-    // Find successor
-    while (s->left != NULL) {
-      s = s->left;
-    }
+      delete c;
+      
+    } else if (c->right) {
 
-    // Swap values
-    c->value = s->value;
-    s->value = temp;
+      if (isLeft) {
+	p->left = c->right;
+      } else {
+	p->right = c->right;
+      }
 
-    deletion(r, c, p, isLeft);
-    
-  } else if (c->left && !c->right) { // One child
-
-    // Swap values
-    
-    int temp = c->value;
-    c->value = c->left->value;
-    c->left->value = temp;
-
-    deletion(r, c, p, n, isLeft);
-
-    
-  } else if (!c->left && c->right) { // One child
-
-    // Swap values
-    
-    int temp = c->value;
-    c->value = c->right->value;
-    c->left->value = temp;
-
-    deletion(r, c, p, n, isLeft);
-    
-  } else { // No child
-    
-    delete c;
-    c = NULL;
-
-    if (isLeft) {
-      p->left = NULL;
+      delete c;
+      
     } else {
-      p->right = NULL;
+
+      if (isLeft) {
+	p->left = NULL;
+      } else {
+	p->right = NULL;
+      }
+
+      delete c;
+
     }
   }
 }

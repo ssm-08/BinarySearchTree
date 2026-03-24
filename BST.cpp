@@ -3,6 +3,7 @@
 
 using namespace std;
 
+// Tree node
 struct Node {
 
   int value;
@@ -11,6 +12,7 @@ struct Node {
   
 };
 
+// Program functions
 bool search(Node* c, int n);
 void print(Node* c, int depth);
 void insertion(Node*& r, Node* c, Node* p, Node* n, bool isLeft);
@@ -18,6 +20,7 @@ void deletion(Node*& r, Node* c, Node* p, int n, bool isLeft);
 
 int main() {
 
+  // Program variables
   Node* root = NULL;
 
   bool run = true;
@@ -29,14 +32,15 @@ int main() {
   const char* DEL = "DELETE";
   const char* PRINT = "PRINT";
   const char* QUIT = "QUIT";
-  
+
+  // Command loop
   while (run == true) {
 
     cout << "Enter command: ";
     cin >> input;
     cout << endl;
 
-    if (strcmp(input, SEARCH) == 0) {
+    if (strcmp(input, SEARCH) == 0) { // Search value
       cout << "Enter number: ";
       cin >> num;
       cout << endl;
@@ -46,17 +50,17 @@ int main() {
       } else {
 	cout << "Not in tree" << endl;
       }
-    } else if (strcmp(input, INS) == 0) {
+    } else if (strcmp(input, INS) == 0) { // Insert value
       cout << "Enter number: ";
       cin >> num;
       cout << endl;
 
-      if (search(root, num)) {
+      if (!search(root, num)) {
 	Node* data = new Node{num, NULL, NULL};
 	insertion(root, root, root, data, true);
       }
 	  
-    } else if (strcmp(input, DEL) == 0) {
+    } else if (strcmp(input, DEL) == 0) { // Delete value
       cout << "Enter number: ";
       cin >> num;
       cout << endl;
@@ -65,14 +69,17 @@ int main() {
 	deletion(root, root, root, num, true);
       }
       
-    } else if (strcmp(input, PRINT) == 0) {
-      print(root, 0);
-    } else if (strcmp(input, QUIT) == 0) {
+    } else if (strcmp(input, PRINT) == 0) { // Print tree
+      if (root) {
+	print(root, 0);
+      }
+    } else if (strcmp(input, QUIT) == 0) { // Quit
       run = false;
     }
   }
 }
 
+// Print values recursively
 void print(Node* c, int depth) {
 
   Node* left = c->left;
@@ -93,6 +100,7 @@ void print(Node* c, int depth) {
   }
 }
 
+// Search for value recursively
 bool search(Node* c, int n) {
 
   if (c == NULL) {
@@ -108,13 +116,14 @@ bool search(Node* c, int n) {
   }
 }
 
+// Insert node recursively
 void insertion(Node*& r, Node* c, Node* p, Node* n, bool isLeft) {
 
   if (r == NULL) { // No root
     r = n;
   } else if (c == NULL) { // End of branch
 
-    // Check the correct end
+    // Check the correct side
     if (isLeft) {
       p->left = n;
     } else {
@@ -127,6 +136,7 @@ void insertion(Node*& r, Node* c, Node* p, Node* n, bool isLeft) {
   }
 }
 
+// Delete node recursively for all cases
 void deletion(Node*& r, Node* c, Node* p, int n, bool isLeft) {
 
   // Find node
@@ -149,7 +159,7 @@ void deletion(Node*& r, Node* c, Node* p, int n, bool isLeft) {
 	child = child->left;
       }
 
-      // Swap and link
+      // Swap and link subsequent nodes
       if (parent) {
 	parent->left = child->right;
       }
@@ -168,7 +178,7 @@ void deletion(Node*& r, Node* c, Node* p, int n, bool isLeft) {
       }
     }
 
-    // Link child in tree and delete node
+    // Link child in tree and delete given node
     
     if (c == r) {
       r = child;
